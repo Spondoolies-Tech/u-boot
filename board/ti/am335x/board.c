@@ -84,6 +84,16 @@ int board_is_evm_15_or_later(void)
 /*
  * Read header information from EEPROM into global structure.
  */
+
+/* Taken from a BBB. */
+static const struct am335x_baseboard_id default_eeprom = {
+	.magic		= 0xee3355aa,
+	.name		= { 0x41, 0x33, 0x33, 0x35, 0x42, 0x4e, 0x4c, 0x54 },
+	.version	= { 0x30, 0x41, 0x35, 0x42 },
+	.serial		= { 0x32, 0x33, 0x31, 0x33, 0x42, 0x42, 0x42, 0x4b, 0x33, 0x36, 0x38, 0x32 },
+	.config		= { [0 ... 31] 0xff }
+};
+
 static int read_eeprom(void)
 {
 	/* Check if baseboard eeprom is available */
@@ -99,6 +109,11 @@ static int read_eeprom(void)
 		puts("Could not read the EEPROM; something fundamentally"
 			" wrong on the I2C bus.\n");
 		return -EIO;
+	}
+
+	if (header.magic != 0xEE3355AA) {
+		puts("No EEPROM found, using default.\n");
+		memcpy(&header, &default_eeprom, sizeof(header));
 	}
 
 	if (header.magic != 0xEE3355AA) {
