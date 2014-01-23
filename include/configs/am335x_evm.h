@@ -55,7 +55,7 @@
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #ifndef CONFIG_SPL_BUILD
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"loadaddr=0x80200000\0" \
+	"loadaddr=0x80007fc0\0" \
 	"fdtaddr=0x80F80000\0" \
 	"fdt_high=0xffffffff\0" \
 	"rdaddr=0x81000000\0" \
@@ -155,6 +155,22 @@
 			"echo WARNING: Could not determine device tree to use; fi; \0"
 #endif
 
+#define CONFIG_BOOTCOMMAND							\
+        "setenv tftpblocksize 1468;"		/* Faster TFTP */		\
+        "i2c mw 0x24 1 0x3e;"			/* Required for MMC */		\
+	"mmc dev 0;"								\
+	"echo Loading from SD Card ...;"					\
+	"if fatload mmc 0 $loadaddr uImage && "					\
+	"	fatload mmc 0 0x80F80000 am335x-boneblack.dtb; then ;"		\
+	"else mmc dev 1; echo Loading from eMMC ...;"				\
+	"	if fatload mmc 1 $loadaddr uImage1 && "				\
+	"		fatload mmc 0 0x80F80000 am335x-boneblack.dtb; then ;"	\
+	"	else dhcp; tftp 0x80F80000 am335x-boneblack.dtb;"		\
+	"fi; fi;"								\
+	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
+        "bootm $loadaddr - 0x80F80000"		/* Boot! */
+
+#if 0
 #define CONFIG_BOOTCOMMAND \
 	"gpio set 53; " \
 	"i2c mw 0x24 1 0x3e; " \
@@ -190,7 +206,8 @@
 			"run uenvcmd;" \
 		"fi; " \
 		"echo; echo uenvcmd was not defined in uEnv.txt ...; echo halting ...; echo;" \
-	"fi;" \
+	"fi;"
+#endif
 
 /* Clock Defines */
 #define V_OSCK				24000000  /* Clock output from T2 */
@@ -227,22 +244,24 @@
 #define CONFIG_CMD_MMC
 #define CONFIG_DOS_PARTITION
 #define CONFIG_CMD_FAT
+#if 0
 #define CONFIG_FAT_WRITE
 #define CONFIG_CMD_EXT2
 #define CONFIG_CMD_EXT4
+#endif
 #define CONFIG_CMD_FS_GENERIC
 
 #define CONFIG_SPI
 #define CONFIG_OMAP3_SPI
-#define CONFIG_MTD_DEVICE
+/* #define CONFIG_MTD_DEVICE */
 #define CONFIG_SPI_FLASH
 #define CONFIG_SPI_FLASH_WINBOND
-#define CONFIG_CMD_SF
+/* #define CONFIG_CMD_SF */
 #define CONFIG_SF_DEFAULT_SPEED		(24000000)
 
 /* USB Composite download gadget - g_dnl */
-#define CONFIG_USB_GADGET
-#define CONFIG_USBDOWNLOAD_GADGET
+/* #define CONFIG_USB_GADGET */
+/* #define CONFIG_USBDOWNLOAD_GADGET */
 
 /* USB TI's IDs */
 #define CONFIG_USBD_HS
@@ -251,10 +270,10 @@
 #define CONFIG_G_DNL_MANUFACTURER "Texas Instruments"
 
 /* USB Device Firmware Update support */
-#define CONFIG_DFU_FUNCTION
-#define CONFIG_DFU_MMC
-#define CONFIG_DFU_NAND
-#define CONFIG_CMD_DFU
+/* #define CONFIG_DFU_FUNCTION */
+/* #define CONFIG_DFU_MMC */
+/* #define CONFIG_DFU_NAND */
+/* #define CONFIG_CMD_DFU */
 #define DFU_ALT_INFO_MMC \
 	"boot part 0 1;" \
 	"rootfs part 0 2;" \
@@ -337,7 +356,7 @@
 #define CONFIG_SPL_MAX_SIZE		(0x4030C000 - CONFIG_SPL_TEXT_BASE)
 #define CONFIG_SPL_STACK		CONFIG_SYS_INIT_SP_ADDR
 
-#define CONFIG_SPL_OS_BOOT
+/* #define CONFIG_SPL_OS_BOOT */
 
 #define CONFIG_SPL_BSS_START_ADDR	0x80a00000
 #define CONFIG_SPL_BSS_MAX_SIZE		0x80000		/* 512 KB */
@@ -381,8 +400,8 @@
 #define CONFIG_SPL_ENV_SUPPORT
 #define CONFIG_SPL_NET_VCI_STRING	"AM335x U-Boot SPL"
 #define CONFIG_SPL_ETH_SUPPORT
-#define CONFIG_SPL_SPI_SUPPORT
-#define CONFIG_SPL_SPI_FLASH_SUPPORT
+/* #define CONFIG_SPL_SPI_SUPPORT */
+/* #define CONFIG_SPL_SPI_FLASH_SUPPORT */
 #define CONFIG_SPL_SPI_LOAD
 #define CONFIG_SPL_SPI_BUS		0
 #define CONFIG_SPL_SPI_CS		0
@@ -391,11 +410,13 @@
 #define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/am33xx/u-boot-spl.lds"
 
 #define CONFIG_SPL_BOARD_INIT
+#if 0
 #define CONFIG_SPL_NAND_AM33XX_BCH
 #define CONFIG_SPL_NAND_SUPPORT
 #define CONFIG_SPL_NAND_BASE
 #define CONFIG_SPL_NAND_DRIVERS
 #define CONFIG_SPL_NAND_ECC
+#endif
 #define CONFIG_SYS_NAND_5_ADDR_CYCLE
 #define CONFIG_SYS_NAND_PAGE_COUNT	(CONFIG_SYS_NAND_BLOCK_SIZE / \
 					 CONFIG_SYS_NAND_PAGE_SIZE)
@@ -438,6 +459,7 @@
 /*
  * USB configuration
  */
+#if 0
 #define CONFIG_USB_MUSB_DSPS
 #define CONFIG_ARCH_MISC_INIT
 #define CONFIG_MUSB_GADGET
@@ -461,6 +483,7 @@
 #define CONFIG_USB_ETH_RNDIS
 #define CONFIG_USBNET_HOST_ADDR	"de:ad:be:af:00:00"
 #endif /* CONFIG_MUSB_GADGET */
+#endif
 
 #if defined(CONFIG_SPL_BUILD) && defined(CONFIG_SPL_USBETH_SUPPORT)
 /* disable host part of MUSB in SPL */
@@ -512,7 +535,7 @@
 #define CONFIG_PHY_ADDR			0
 #define CONFIG_PHY_SMSC
 
-#define CONFIG_NAND
+/* #define CONFIG_NAND */
 /* NAND support */
 #ifdef CONFIG_NAND
 #define CONFIG_CMD_NAND
@@ -537,6 +560,9 @@
 #define CONFIG_ENV_OFFSET		0x260000 /* environment starts here */
 #define CONFIG_SYS_ENV_SECT_SIZE	(128 << 10)	/* 128 KiB */
 #endif
+#else
+#define MTDIDS_DEFAULT			""
+#define MTDPARTS_DEFAULT		""
 #endif
 
 #endif	/* ! __CONFIG_AM335X_EVM_H */
