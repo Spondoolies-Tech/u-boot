@@ -168,7 +168,7 @@
 	"	else dhcp; tftp 0x81000000 am335x-boneblack.dtb;"		\
 	"fi; fi;"								\
 	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
-        "bootm $loadaddr - 0x80F80000"		/* Boot! */
+        "bootm $loadaddr - 0x81000000"		/* Boot! */
 
 #if 0
 #define CONFIG_BOOTCOMMAND \
