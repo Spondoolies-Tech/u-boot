@@ -61,7 +61,7 @@
 	"rdaddr=0x81000000\0" \
 	"bootdir=/boot\0" \
 	"bootfile=uImage\0" \
-	"fdtfile=am335x-boneblack.dtb\0" \
+	"fdtfile=spondoolies.dtb\0" \
 	"console=ttyO0,115200n8\0" \
 	"optargs=\0" \
 	"mtdids=" MTDIDS_DEFAULT "\0" \
@@ -161,11 +161,11 @@
 	"mmc dev 0;"								\
 	"echo Loading from SD Card ...;"					\
 	"if fatload mmc 0 $loadaddr uImage && "					\
-	"	fatload mmc 0 0x81000000 am335x-boneblack.dtb; then ;"		\
+	"	fatload mmc 0 0x81000000 spondoolies.dtb; then ;"		\
 	"else mmc dev 1; echo Loading from eMMC ...;"				\
 	"	if fatload mmc 1 $loadaddr uImage1 && "				\
-	"		fatload mmc 0 0x81000000 am335x-boneblack.dtb; then ;"	\
-	"	else dhcp; tftp 0x81000000 am335x-boneblack.dtb;"		\
+	"		fatload mmc 0 0x81000000 spondoolies.dtb; then ;"	\
+	"	else dhcp; tftp 0x81000000 spondoolies.dtb;"			\
 	"fi; fi;"								\
 	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
         "bootm $loadaddr - 0x81000000"		/* Boot! */
