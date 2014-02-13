@@ -161,14 +161,14 @@
 	"mmc dev 0;"								\
 	"echo Loading from SD Card ...;"					\
 	"if fatload mmc 0 $loadaddr uImage && "					\
-	"	fatload mmc 0 0x81000000 spondoolies.dtb; then ;"		\
+	"	fatload mmc 0 0x9fff4000 spondoolies.dtb; then ;"		\
 	"else mmc dev 1; echo Loading from eMMC ...;"				\
 	"	if fatload mmc 1 $loadaddr uImage1 && "				\
-	"		fatload mmc 0 0x81000000 spondoolies.dtb; then ;"	\
-	"	else dhcp; tftp 0x81000000 spondoolies.dtb;"			\
+	"		fatload mmc 0 0x9fff4000 spondoolies.dtb; then ;"	\
+	"	else dhcp; tftp 0x9fff4000 spondoolies.dtb;"			\
 	"fi; fi;"								\
 	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
-        "bootm $loadaddr - 0x81000000"		/* Boot! */
+        "bootm $loadaddr - 0x9fff4000"		/* Boot! */
 
 #if 0
 #define CONFIG_BOOTCOMMAND \
