@@ -56,7 +56,7 @@
 #ifndef CONFIG_SPL_BUILD
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80007fc0\0" \
-	"fdtaddr=0x80F80000\0" \
+	"fdtaddr=0x9fff4000\0" \
 	"fdt_high=0xffffffff\0" \
 	"rdaddr=0x81000000\0" \
 	"bootdir=/boot\0" \
@@ -64,6 +64,8 @@
 	"fdtfile=spondoolies.dtb\0" \
 	"console=ttyO0,115200n8\0" \
 	"optargs=\0" \
+	"sdcard=0\0"	/* SD Card number on MMC bus enumeration. */	\
+	"emmc=1\0"	/* eMMC number on MMC bus enumeration. */	\
 	"mtdids=" MTDIDS_DEFAULT "\0" \
 	"mtdparts=" MTDPARTS_DEFAULT "\0" \
 	"dfu_alt_info_mmc=" DFU_ALT_INFO_MMC "\0" \
@@ -158,17 +160,17 @@
 #define CONFIG_BOOTCOMMAND							\
         "setenv tftpblocksize 1468;"		/* Faster TFTP */		\
         "i2c mw 0x24 1 0x3e;"			/* Required for MMC */		\
-	"mmc dev 0;"								\
+	"mmc dev $sdcard;"							\
 	"echo Loading from SD Card ...;"					\
-	"if fatload mmc 0 $loadaddr uImage && "					\
-	"	fatload mmc 0 0x9fff4000 spondoolies.dtb; then ;"		\
-	"else mmc dev 1; echo Loading from eMMC ...;"				\
-	"	if fatload mmc 1 $loadaddr uImage1 && "				\
-	"		fatload mmc 0 0x9fff4000 spondoolies.dtb; then ;"	\
-	"	else dhcp; tftp 0x9fff4000 spondoolies.dtb;"			\
+	"if fatload mmc $sdcard $loadaddr uImage && "				\
+	"	fatload mmc $sdcard $fdtaddr spondoolies.dtb; then ;"		\
+	"else mmc dev $emmc; echo Loading from eMMC ...;"			\
+	"	if fatload mmc $emmc $loadaddr uImage && "			\
+	"		fatload mmc $emmc $fdtaddr spondoolies.dtb; then ;"	\
+	"	else dhcp; tftp $fdtaddr spondoolies.dtb;"			\
 	"fi; fi;"								\
 	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
-        "bootm $loadaddr - 0x9fff4000"		/* Boot! */
+        "bootm $loadaddr - $fdtaddr"		/* Boot! */
 
 #if 0
 #define CONFIG_BOOTCOMMAND \
