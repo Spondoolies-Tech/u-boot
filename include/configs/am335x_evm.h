@@ -163,13 +163,13 @@
 	"mmc dev $sdcard;"							\
 	"echo Loading from SD Card ...;"					\
 	"if fatload mmc $sdcard $loadaddr uImage && "				\
-	"	fatload mmc $sdcard $fdtaddr spondoolies.dtb; then ;"		\
+	"	fatload mmc $sdcard $fdtaddr $fdtfile; then bootfrom=sd;"	\
 	"else mmc dev $emmc; echo Loading from eMMC ...;"			\
 	"	if fatload mmc $emmc $loadaddr uImage && "			\
-	"		fatload mmc $emmc $fdtaddr spondoolies.dtb; then ;"	\
-	"	else dhcp; tftp $fdtaddr spondoolies.dtb;"			\
+	"		fatload mmc $emmc $fdtaddr $fdtfile; then bootfrom=mmc;"\
+	"	else dhcp; tftp $fdtaddr $fdtfile; bootfrom=net;"		\
 	"fi; fi;"								\
-	"setenv bootargs console=$console ip=$ipaddr::::::none::;" /* Set minimal bootargs */	\
+	"setenv bootargs console=$console ip=$ipaddr::::::none:: bootfrom=$bootfrom;" \
         "bootm $loadaddr - $fdtaddr"		/* Boot! */
 
 #if 0
