@@ -111,4 +111,8 @@ int init_func_watchdog_reset(void);
 #if defined(CONFIG_HW_WATCHDOG) && !defined(__ASSEMBLY__)
 	void hw_watchdog_init(void);
 #endif
+
+
+void hw_watchdog_disable(void);
+
 #endif /* _WATCHDOG_H_ */

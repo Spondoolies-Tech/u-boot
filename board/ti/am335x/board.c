@@ -420,6 +420,10 @@ int board_late_init(void)
 	setenv("board_rev", safe_string);
 #endif
 
+#ifdef CONFIG_CMD_WDOG
+	hw_watchdog_init();
+#endif
+
 	return 0;
 }
 #endif

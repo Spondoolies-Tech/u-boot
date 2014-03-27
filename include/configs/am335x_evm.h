@@ -567,4 +567,14 @@
 #define MTDPARTS_DEFAULT		""
 #endif
 
+#ifndef CONFIG_SPL_BUILD
+#define CONFIG_CMD_WDOG
+
+#ifdef CONFIG_CMD_WDOG
+#define CONFIG_OMAP_WATCHDOG
+#define CONFIG_WATCHDOG_BASEADDR	0x44e35000
+#endif
+#endif
+
+
 #endif	/* ! __CONFIG_AM335X_EVM_H */
