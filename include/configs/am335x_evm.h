@@ -158,8 +158,14 @@
 #endif
 
 #define CONFIG_BOOTCOMMAND							\
-        "setenv tftpblocksize 1468;"		/* Faster TFTP */		\
-        "i2c mw 0x24 1 0x3e;"			/* Required for MMC */		\
+        "setenv tftpblocksize 1468;"	/* Faster TFTP */			\
+        "i2c mw 0x24 1 0x3e;"		/* Required for MMC */			\
+										\
+	/* Lit yellow LED (GPIO 22) on the front panel. */			\
+	"mw.l 44e07134 ffbfffff;"	/* GPIO0; GPIO_OE, bit 22 --> output */	\
+	"mw.l 44e0713c 400000;"		/* GPIO0; GPIO_DATAOUT, bit 22 --> 1 */	\
+										\
+	/* Loading kernel and DTB from various medias: SD, eMMC and network. */	\
 	"mmc dev $sdcard;"							\
 	"echo Loading from SD Card ...;"					\
 	"if fatload mmc $sdcard $loadaddr uImage && "				\
@@ -169,6 +175,8 @@
 	"		fatload mmc $emmc $fdtaddr $fdtfile; then bootfrom=mmc;"\
 	"	else dhcp; tftp $fdtaddr $fdtfile; bootfrom=net;"		\
 	"fi; fi;"								\
+										\
+	/* Finally boot the kernel. */						\
 	"setenv bootargs console=$console ip=$ipaddr::::::none:: bootfrom=$bootfrom;" \
         "bootm $loadaddr - $fdtaddr"		/* Boot! */
 
