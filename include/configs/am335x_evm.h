@@ -165,6 +165,10 @@
 	"mw.l 44e07134 ffbfffff;"	/* GPIO0; GPIO_OE, bit 22 --> output */	\
 	"mw.l 44e0713c 400000;"		/* GPIO0; GPIO_DATAOUT, bit 22 --> 1 */	\
 										\
+	/* Disabling fans (GPIO110) */						\
+	"mw.l 481ae134 ffffbfff;"	/* GPIO3; GPIO_OE, bit 14 --> output */	\
+	"mw.l 481ae13c 4000;"		/* GPIO0; GPIO_DATAOUT, bit 14 --> 1 */	\
+										\
 	/* Loading kernel and DTB from various medias: SD, eMMC and network. */	\
 	"mmc dev $sdcard;"							\
 	"echo Loading from SD Card ...;"					\
